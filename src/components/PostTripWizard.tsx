@@ -7,6 +7,8 @@ import Select from 'react-select';
 import { Languages, Smile, Users } from 'lucide-react';
 import { TripCard } from '@/components/TripCard';
 import { getStaticCities, searchCitiesWithMapbox } from '@/lib/mapbox';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const accommodationTypes = ['Hotel', 'Hostel', 'Airbnb', 'Villa', 'Resort', 'Apartment', 'Guesthouse'];
 const defaultLanguages = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Mandarin', 'Japanese', 'Korean', 'Arabic', 'Hindi', 'Russian'];
@@ -14,8 +16,8 @@ const defaultLanguages = ['English', 'Spanish', 'French', 'German', 'Italian', '
 const initialForm: TripDraftForm = {
   tripName: '',
   destination: '',
-  startDate: '',
-  endDate: '',
+  startDate: null,
+  endDate: null,
   isFlexible: false,
   languagesSpoken: [],
   openToMatch: 'anyone',
@@ -66,11 +68,9 @@ export const PostTripWizard: React.FC = () => {
     if (!form.startDate) {
       stepErrors.startDate = 'Start date is required';
     }
-
     if (!form.endDate) {
       stepErrors.endDate = 'End date is required';
     }
-
     if (form.startDate && form.endDate && form.startDate >= form.endDate) {
       stepErrors.endDate = 'End date must be after start date';
     }
@@ -310,14 +310,17 @@ export const PostTripWizard: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Start Date */}
               <div>
                 <label className="block text-sm sm:text-base font-medium text-gray-800 mb-2">
                   Start Date <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="date"
-                  value={form.startDate}
-                  onChange={(e) => updateForm({ startDate: e.target.value })}
+                <DatePicker
+                  selected={form.startDate}
+                  onChange={(date) => updateForm({ startDate: date })}
+                  dateFormat="dd MMM yyyy"
+                  placeholderText="Select start date"
+                  minDate={new Date()}
                   className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg sm:rounded-xl focus:ring-2 transition-all text-sm sm:text-base ${errors.startDate
                     ? 'border-red-500 focus:ring-red-500'
                     : 'border-gray-300 focus:ring-indigo-500 focus:border-transparent'
@@ -327,14 +330,18 @@ export const PostTripWizard: React.FC = () => {
                   <p className="mt-2 text-sm text-red-600">{errors.startDate}</p>
                 )}
               </div>
+
+              {/* End Date */}
               <div>
                 <label className="block text-sm sm:text-base font-medium text-gray-800 mb-2">
                   End Date <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="date"
-                  value={form.endDate}
-                  onChange={(e) => updateForm({ endDate: e.target.value })}
+                <DatePicker
+                  selected={form.endDate}
+                  onChange={(date) => updateForm({ endDate: date })}
+                  dateFormat="dd MMM yyyy"
+                  placeholderText="Select end date"
+                  minDate={form.startDate || new Date()}
                   className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg sm:rounded-xl focus:ring-2 transition-all text-sm sm:text-base ${errors.endDate
                     ? 'border-red-500 focus:ring-red-500'
                     : 'border-gray-300 focus:ring-indigo-500 focus:border-transparent'
@@ -600,7 +607,7 @@ export const PostTripWizard: React.FC = () => {
         {currentStep === 4 && (
           <div className="space-y-4 sm:space-y-6">
             <div className="mb-4 sm:mb-6">
-              <TripCard trip={cardTrip} />
+              <TripCard trip={cardTrip} isPreviewOnly={true} />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 text-sm">
               <div className="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
@@ -613,7 +620,10 @@ export const PostTripWizard: React.FC = () => {
               </div>
               <div className="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
                 <p className="text-gray-500 text-xs sm:text-sm">Dates</p>
-                <p className="font-medium text-gray-800 text-sm sm:text-base break-words">{form.startDate || '—'} — {form.endDate || '—'}</p>
+                <p className="font-medium text-gray-800 text-sm sm:text-base break-words">
+                  {form.startDate ? form.startDate.toLocaleDateString() : '—'} —{" "}
+                  {form.endDate ? form.endDate.toLocaleDateString() : '—'}
+                </p>
               </div>
               <div className="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
                 <p className="text-gray-500 text-xs sm:text-sm">Flexible</p>
@@ -657,12 +667,11 @@ export const PostTripWizard: React.FC = () => {
           </div>
         )}
 
-        {/* Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row justify-between mt-6 sm:mt-8 gap-3 sm:gap-4">
+        <div className="flex justify-between mt-6 sm:mt-8 gap-3 sm:gap-4">
           <button
             onClick={() => setCurrentStep((s) => Math.max(1, s - 1))}
             disabled={currentStep === 1}
-            className="px-4 sm:px-6 py-2.5 sm:py-3 w-full sm:w-auto bg-gray-100 text-gray-600 rounded-lg sm:rounded-xl font-semibold hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base order-2 sm:order-1"
+            className="px-4 w-full sm:px-6 py-2.5 sm:py-3  bg-gray-100 text-gray-600 rounded-lg sm:rounded-xl font-semibold hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base order-2 sm:order-1"
           >
             Back
           </button>
@@ -670,14 +679,14 @@ export const PostTripWizard: React.FC = () => {
           {currentStep < steps.length ? (
             <button
               onClick={handleNextStep}
-              className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base order-1 sm:order-2"
+              className="px-6  w-full sm:px-8 py-2.5 sm:py-3  bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base order-1 sm:order-2"
             >
               Next
             </button>
           ) : (
             <button
               onClick={submitTrip}
-              className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base order-1 sm:order-2"
+              className="px-6 w-full  sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base order-1 sm:order-2"
             >
               Confirm & Post
             </button>

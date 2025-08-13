@@ -12,12 +12,13 @@
     "lucide-react": "^0.539.0",
     "next": "15.4.6",
     "react": "19.1.0",
+    "react-datepicker": "^8.4.0",
     "react-dom": "19.1.0",
     "react-select": "^5.10.2"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^5",
     "@eslint/eslintrc": "^3",
+    "@netlify/plugin-nextjs": "^5",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

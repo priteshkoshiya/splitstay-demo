@@ -15,7 +15,7 @@
     "accommodationType": "Villa",
     "accommodationLink": "https://example.com/accommodation/1",
     "personalNote": "Near the beach, great sunrise views",
-    "price": "$140 / night",
+    "price": "140",
     "userProfile": {
       "id": "u1",
       "name": "Alex Johnson",
@@ -45,7 +45,7 @@
     "accommodationType": "Apartment",
     "accommodationLink": "https://example.com/accommodation/2",
     "personalNote": "Looking for chill folks who love ramen and art.",
-    "price": "$110 / night",
+    "price": "110",
     "userProfile": {
       "id": "u2",
       "name": "Mina Sato",
@@ -74,7 +74,7 @@
     "accommodationType": "Hostel",
     "accommodationLink": "https://example.com/accommodation/3",
     "personalNote": "Cowork-friendly spot with great Wi-Fi.",
-    "price": "$55 / night",
+    "price": "55",
     "userProfile": {
       "id": "u3",
       "name": "Diego Costa",
@@ -103,7 +103,7 @@
     "accommodationType": "Resort",
     "accommodationLink": "https://example.com/accommodation/4",
     "personalNote": "Spa on-site, daily yoga classes included.",
-    "price": "$180 / night",
+    "price": "180",
     "userProfile": {
       "id": "u4",
       "name": "Priya Kapoor",

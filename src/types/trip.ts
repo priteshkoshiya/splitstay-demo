@@ -10,8 +10,8 @@ export interface UserProfile {
 export interface TripDraftForm {
   tripName: string;
   destination: string;
-  startDate: string; // ISO date string
-  endDate: string;   // ISO date string
+  startDate: Date | null;
+  endDate: Date | null;
   isFlexible: boolean;
   languagesSpoken: string[];
   openToMatch: GenderPreference;

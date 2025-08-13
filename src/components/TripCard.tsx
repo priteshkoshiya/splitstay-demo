@@ -7,8 +7,8 @@ import { Calendar, ExternalLink, Home, MapPin, Users, Heart, Share2, Star, Globe
 interface Trip {
   tripName: string;
   destination: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date | null | string;
+  endDate: Date | null | string;
   isFlexible?: boolean;
   accommodationType: string;
   openToMatch: string;
@@ -26,9 +26,10 @@ interface Trip {
 
 interface TripCardProps {
   trip: Trip;
+  isPreviewOnly?: boolean;
 }
 
-export const TripCard: React.FC<TripCardProps> = ({ trip }) => {
+export const TripCard: React.FC<TripCardProps> = ({ trip, isPreviewOnly = false }) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const mockTrip: Trip = {
@@ -88,7 +89,7 @@ export const TripCard: React.FC<TripCardProps> = ({ trip }) => {
           </div>
         </div>
 
-        <div className="flex gap-1 ml-3">
+        {!isPreviewOnly && <div className="flex gap-1 ml-3">
           <button
             onClick={() => setIsLiked(!isLiked)}
             className={`p-2 rounded-lg transition-colors ${isLiked ? "bg-red-50 text-red-600" : "bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-red-500"
@@ -99,7 +100,7 @@ export const TripCard: React.FC<TripCardProps> = ({ trip }) => {
           <button className="p-2 rounded-lg bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-blue-600 transition-colors">
             <Share2 size={16} />
           </button>
-        </div>
+        </div>}
       </div>
 
       <div className="space-y-3 mb-4 flex-grow overflow-hidden">
@@ -107,7 +108,13 @@ export const TripCard: React.FC<TripCardProps> = ({ trip }) => {
           <div className="flex items-center gap-2 text-gray-700">
             <Calendar size={14} className="text-purple-500" />
             <span className="text-sm">
-              {displayTrip.startDate} - {displayTrip.endDate}
+              {displayTrip.startDate instanceof Date
+                ? displayTrip.startDate.toLocaleDateString()
+                : displayTrip.startDate}{" "}
+              -{" "}
+              {displayTrip.endDate instanceof Date
+                ? displayTrip.endDate.toLocaleDateString()
+                : displayTrip.endDate}
             </span>
           </div>
           {displayTrip.isFlexible && (
@@ -120,7 +127,7 @@ export const TripCard: React.FC<TripCardProps> = ({ trip }) => {
             <Home size={14} className="text-orange-500" />
             <span className="text-sm">{displayTrip.accommodationType}</span>
           </div>
-          {displayTrip.price && <span className="text-sm font-semibold text-gray-900">{displayTrip.price}</span>}
+          {displayTrip.price && <span className="text-sm font-semibold text-gray-900">${displayTrip.price} /  night</span>}
         </div>
 
         <div className="flex items-center gap-2 text-gray-700">
@@ -145,7 +152,7 @@ export const TripCard: React.FC<TripCardProps> = ({ trip }) => {
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-100 mt-auto">
+      {!isPreviewOnly && <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-100 mt-auto">
         <div className="flex items-center gap-3">
           <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
             Join Trip
@@ -168,7 +175,7 @@ export const TripCard: React.FC<TripCardProps> = ({ trip }) => {
             <span>View Stay</span>
           </a>
         )}
-      </div>
+      </div>}
     </div>
   );
 };
